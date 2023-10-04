@@ -5,34 +5,34 @@
  */
 package lab11_tritd;
 
-import data.Cabinet;
-import option.menu;
+import data.Manager;
+import option.Menu;
 
 /**
  *
  * @author hii
  */
-public class Lab11_triTD {
+public class Main {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        menu m1 = new menu("FruitShop");
+        Menu m1 = new Menu("FruitShop");
         m1.addNewOption("1. Create fruit");
         m1.addNewOption("2. Update fruit");
         m1.addNewOption("3. View orders");
         m1.addNewOption("4. Shopping (for buyer)");
         m1.addNewOption("5. Exit");
         int choice;
-        Cabinet c = new Cabinet();
+        Manager c = new Manager();
         do {
             m1.printMenu();
             choice = m1.getChoice();
             switch (choice) {
                 case 1:
-                    c.addNewFruit(c.yesNoqs("Do you want to continue(Y/N) ?"));
+                    c.addNewFruit(c.checkOrder("Do you want to continue(Y/N) ?"));
                     break;
                 case 2:
                     c.updateFruid();
@@ -42,11 +42,8 @@ public class Lab11_triTD {
                     break;
                 case 4:
                     c.shopping();
-                    
                     break;
-
                 case 5:
-
                     System.out.println("See you next time!!!");
                     return;
             }

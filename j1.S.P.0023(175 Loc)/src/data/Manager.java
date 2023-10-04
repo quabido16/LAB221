@@ -10,15 +10,12 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Scanner;
 
-/**
- *
- * @author hii
- */
-public class Cabinet {
+public class Manager {
 
     final Scanner sc = new Scanner(System.in);
     ArrayList<Fruit> listFruit = new ArrayList<>();
-    Hashtable<String, ArrayList<order>> hashMap = new Hashtable<String, ArrayList<order>>();
+    Hashtable<String, ArrayList<Order>> hashMap = new Hashtable<String, ArrayList<Order>>();
+
     //thêm 1 loại quả
     public void addNewFruit(boolean x) {
         if (x == true) {
@@ -26,18 +23,30 @@ public class Cabinet {
             String name;
             int price;
             int quantity;
-            id = myToys.getString("Input ID fruit", "Please don't not leave bank");
+
+            while (true) {
+                id = myToys.getString("Input ID fruit", "Please don't not leave bank");
+                if (checkID(id) != null) {
+                    System.out.println("ID is exist, enter again");
+                } else {
+                    break;
+                }
+            }
             name = myToys.getString("Input name fruit", "Please don't not leave bank");
             price = myToys.getAnInteger("Input price fruit", "Please input number price fruit");
             quantity = myToys.getAnInteger("Input number quantity", "Please input number quantity");
             origin = myToys.getString("Input origin fruit", "Please don't not leave bank");
             listFruit.add(new Fruit(id, name, price, quantity, origin));
         } else {
+            if (!listFruit.isEmpty()) {
+                displayListFruit();
+            }
             return;
         }
     }
+
     //xác nhận xem có chắc chắn muốn đặt hàng, thêm loại trái cây
-    public boolean yesNoqs(String x) {
+    public boolean checkOrder(String x) {
         System.out.println(x);
         String choose;
         choose = sc.nextLine();
@@ -46,53 +55,25 @@ public class Cabinet {
         }
         return false;
     }
+
     //cập nhật trái cây
     public void updateFruid() {
-        String id, origin;
-        String name;
-        int price;
-        int quantity;
-        id = myToys.getString("Input id", "Please input id");
-        int x = checkID(id);
-        System.out.println(x);
-        if (x >= 0) {
-            System.out.println("Update the fruit now");
-            listFruit.get(x).setQuantity(myToys.getAnInteger("Input the new quantity", "Please input number quantity"));
-        } else {
-            if (yesNoqs("No search the id required. Can you create the new fruit(Y/N)")) {
-                id = myToys.getString("Input ID fruit", "Please don't not leave bank");
-                name = myToys.getString("Input name fruit", "Please don't not leave bank");
-                price = myToys.getAnInteger("Input price fruit", "Please input number price fruit");
-                quantity = myToys.getAnInteger("Input number quantity", "Please input number quantity");
-                origin = myToys.getString("Input origin fruit", "Please don't not leave bank");
-                listFruit.add(new Fruit(id, name, price, quantity, origin));
-            } else {
-                return;
-            }
-        }
-
     }
 
-    public int checkID(String id) {
-        if (listFruit.isEmpty()) {
-            return -1;
-        }
+    public Fruit checkID(String id) {
 
-        for (int i = 0; i < listFruit.size(); i++) {
-            if (listFruit.get(i).getFruitID().equalsIgnoreCase(id)) {
-                return i;
+        for (Fruit fruit : listFruit) {
+            if (fruit.getFruitID().equalsIgnoreCase(id)) {
+                return fruit;
             }
         }
-
-        return -1;
+        return null;
     }
 
-   
-
-    public void displayListFruit(ArrayList<Fruit> lf) {
+    public void displayListFruit() {
         int countItem = 1;
         System.out.printf("%-10s%-20s%-20s%-15s\n", "Item", "Fruit name", "Origin", "Price");
-        for (Fruit fruit : lf) {
+        for (Fruit fruit : listFruit) {
             //check shop have item or not 
             if (fruit.getQuantity() != 0) {
                 System.out.printf("%-10d%-20s%-20s%-10d$\n", countItem++,
@@ -100,11 +81,12 @@ public class Cabinet {
             }
         }
     }
+
     //hiện thị danh sách trong Order
-    public void displayListOrder(ArrayList<order> lo) {
+    public void displayListOrder(ArrayList<Order> lo) {
         double total = 0;
         System.out.printf("%15s%15s%15s%15s\n", "Product", "Quantity", "Price", "Amount");
-        for (order order : lo) {
+        for (Order order : lo) {
             System.out.printf("%15s%15d%15d$%15d$\n", order.getName(),
                     order.getQuantity(), order.getPrice(),
                     order.getPrice());
@@ -112,45 +94,42 @@ public class Cabinet {
         }
         System.out.println("Total: " + total);
     }
-    
-    
-    public int checkID(ArrayList<order> lo, int item) {
+
+    public int checkID(ArrayList<Order> lo, int item) {
         if (lo.isEmpty()) {
             return -1;
         }
 
         for (int i = 0; i < lo.size(); i++) {
-            if (lo.get(i).getId().equalsIgnoreCase(listFruit.get(item-1).getFruitID())) {
+            if (lo.get(i).getId().equalsIgnoreCase(listFruit.get(item - 1).getFruitID())) {
                 return i;
             }
         }
 
         return -1;
     }
+
     public void shopping() {
         if (listFruit.isEmpty()) {
             System.err.println("No have item.");
             return;
         }
-        ArrayList<order> orderList = new ArrayList<>();
+        ArrayList<Order> orderList = new ArrayList<>();
         while (true) {
-            displayListFruit(listFruit);
+            displayListFruit();
             int item = myToys.getAnInteger("Input number item", "Please input number integer", 1, listFruit.size() + 1);
 
             int quantity = myToys.getAnInteger("Input the quantity", "Please input integer");
-            
+
             //order trùng id thì chỉ update thôi ko thêm
-            if(checkID(orderList, item) < 0){
-                orderList.add(new order(listFruit.get(item-1).getFruitID(), listFruit.get(item-1).getFruitName(), quantity,listFruit.get(item-1).getPrice()));
-            }else{
+            if (checkID(orderList, item) < 0) {
+                orderList.add(new Order(listFruit.get(item - 1).getFruitID(), listFruit.get(item - 1).getFruitName(),
+                        quantity, listFruit.get(item - 1).getPrice()));
+            } else {
                 System.out.println("You have already selected this item, update");
-                orderList.get(item-1).setQuantity(quantity);
-                
+                orderList.get(item - 1).setQuantity(quantity);
             }
-            
-            
-            
-            if (yesNoqs("Would you like to choose more fruit?(Y/N) ")) {
+            if (checkOrder("Would you like to choose more fruit?(Y/N) ")) {
                 //listFruit.get(item).setPrice(quantity * listFruit.get(item).getPrice());
                 break;
             }
@@ -160,6 +139,7 @@ public class Cabinet {
         hashMap.put(name, orderList);
         System.out.println("Add order successfull, thank you for buying!");
     }
+
     //hiện thị danh sách hàng đặt của từng người
     public void showOrder() {
         if (hashMap.isEmpty()) {
@@ -167,7 +147,7 @@ public class Cabinet {
         } else {
             for (String name : hashMap.keySet()) {
                 System.out.println("Customer: " + name);
-                ArrayList<order> lo = hashMap.get(name);
+                ArrayList<Order> lo = hashMap.get(name);
                 displayListOrder(lo);
             }
 

@@ -12,11 +12,11 @@ import java.util.ArrayList;
  *
  * @author hii
  */
-public class menu {
+public class Menu {
     private String nameMenu;
     private ArrayList<String> optionList = new ArrayList<>();
 
-    public menu(String nameMenu) {
+    public Menu(String nameMenu) {
         this.nameMenu = nameMenu;
     }
 

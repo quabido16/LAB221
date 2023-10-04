@@ -9,13 +9,13 @@ package data;
  *
  * @author hii
  */
-public class order {
+public class Order {
     private String id;
     private String name;
     private int quantity;
     private int price;
 
-    public order(String id, String name, int quantity, int price) {
+    public Order(String id, String name, int quantity, int price) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
