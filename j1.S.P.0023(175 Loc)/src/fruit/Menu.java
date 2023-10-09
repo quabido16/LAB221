@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package option;
+package fruit;
 
-import input.myToys;
+import fruit.GetData;
 import java.util.ArrayList;
 
 /**
@@ -39,7 +39,7 @@ public class Menu {
     public int getChoice(){
         String input = "Choose 1..." + optionList.size();
         String error = "Please input integer";
-        return myToys.getAnInteger(input, error, 1, optionList.size());
+        return GetData.getAnInteger(input, error, 1, optionList.size());
         
     }
 }

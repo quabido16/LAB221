@@ -3,10 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lab11_tritd;
+package fruit;
 
-import data.Manager;
-import option.Menu;
+import fruit.Manager;
 
 /**
  *
@@ -32,7 +31,7 @@ public class Main {
             choice = m1.getChoice();
             switch (choice) {
                 case 1:
-                    c.addNewFruit(c.checkOrder("Do you want to continue(Y/N) ?"));
+                    c.addNewFruit();
                     break;
                 case 2:
                     c.updateFruid();

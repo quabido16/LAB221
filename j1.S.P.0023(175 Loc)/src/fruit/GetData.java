@@ -3,14 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package input;
+package fruit;
 
 import java.util.Scanner;
 
-
 //tất cả các hàm nhập xuất chặn tất cả các trường hợp
+public class GetData {
 
-public class myToys {
     private static Scanner sc = new Scanner(System.in);
 
     //nhập số nguyên, chặn các TH
@@ -85,8 +84,9 @@ public class myToys {
             match = id.matches(format);
             if (id.isEmpty() || id.length() == 0 || match == false) {
                 System.out.println(error);
-            }else
+            } else {
                 return id;
+            }
         }
     }
 
@@ -98,9 +98,10 @@ public class myToys {
             msg = sc.nextLine().trim();
             if (msg.length() == 0 || msg.isEmpty()) {
                 System.out.println(error);
+          
+            } else {
+                return msg;
             }
-            return msg;
-
         }
-}
+    }
 }
