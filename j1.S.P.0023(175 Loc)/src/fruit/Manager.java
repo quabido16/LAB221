@@ -65,20 +65,19 @@ public class Manager {
 
     public void displayListFruit() {
         int countItem = 1;
-        System.out.printf("%-10s%-20s%-20s%-15s\n", "Item", "Fruit name", "Origin", "Price");
+        System.out.printf("%-10s%-20s%-20s%-15s%-15s\n", "Item", "Fruit name", "Origin", "Price", "Quanity");
         for (Fruit fruit : listFruit) {
             //check shop have item or not 
-            if (fruit.getQuantity() != 0) {
-                System.out.printf("%-10d%-20s%-20s%-10d$\n", countItem++,
-                        fruit.getFruitName(), fruit.getOrigin(), fruit.getPrice());
-            }
+
+            System.out.printf("%-10d%-20s%-20s%-20d%d\n", countItem++,
+                    fruit.getFruitName(), fruit.getOrigin(), fruit.getPrice(), fruit.getQuantity());
+
         }
     }
 
     //hiện thị danh sách trong Order
     public void displayListOrder(ArrayList<Fruit> listOrder) {
         double total = 0;
-
         System.out.printf("%15s%15s%15s%15s\n", "Product", "Quantity", "Price", "Amount");
         for (Fruit fruit : listOrder) {
             System.out.printf("%15s%15d%15d$%15d$\n", fruit.getFruitName(),
@@ -102,16 +101,23 @@ public class Manager {
     public Fruit getFruitByItem(int item) {
         int count = 0;
         for (Fruit fruit : listFruit) {
-            if (fruit.getQuantity() != 0) {
+            if (fruit.getPrice() != 0) {
                 count++;
             }
             if (count == item) {
                 return fruit;
-
             }
-
         }
         return null;
+    }
+
+    public void updateOrder(ArrayList<Fruit> lo, String id, int quantity) {
+        for (Fruit order : lo) {
+            if (order.getFruitID().equalsIgnoreCase(id)) {
+                order.setQuantity(order.getQuantity() + quantity);
+                return;
+            }
+        }
     }
 
     public void shopping() {
@@ -123,22 +129,27 @@ public class Manager {
         while (true) {
             displayListFruit();
             int item = GetData.getAnInteger("Input number item", "Please input number integer", 1, listFruit.size() + 1);
-
-            int quantity = GetData.getAnInteger("Input the quantity", "Please input integer");
             Fruit fruit = getFruitByItem(item);
-            //order trùng id thì chỉ update thôi ko thêm
-            if (checkID(orderList, fruit.getFruitID()) == null) {
-                orderList.add(new Fruit(fruit.getFruitID(), fruit.getFruitName(), fruit.getPrice(),
-                        fruit.getQuantity(), fruit.getOrigin()));
-            } else {
-                System.out.println("You have already selected this item, update");
-                orderList.get(item - 1).setQuantity(orderList.get(item - 1).getQuantity() + quantity);
+            if (fruit.getQuantity() == 0) {
+                System.out.println("Sold");
+                if (!checkOrder("Do you want continue (Y/N)")) {
+                    break;
+                } else {
+                    continue;
+                }
             }
-            if (checkOrder("Would you like to choose more fruit?(Y/N) ")) {
-                //listFruit.get(item).setPrice(quantity * listFruit.get(item).getPrice());
+            int quantity = GetData.getAnInteger("Input quanity: ", "Input again:", 1, fruit.getQuantity());
+            fruit.setQuantity(fruit.getQuantity() - quantity);
+            if (checkID(orderList, fruit.getFruitID()) == null) {
+                orderList.add(new Fruit(fruit.getFruitID(), fruit.getFruitName(), fruit.getPrice(), quantity, fruit.getOrigin()));
+            } else {
+                updateOrder(orderList, fruit.getFruitID(), quantity);
+            }
+            if (!checkOrder("Do you want continue (Y/N)")) {
                 break;
             }
         }
+
         displayListOrder(orderList);
         String name = GetData.getString("Input name customer", "Please input string name");
         order.put(name, orderList);
